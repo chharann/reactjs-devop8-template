@@ -1,49 +1,36 @@
 pipeline{
     agent any 
     stages{
-        stage("Stage one "){
-            steps{
-                sh """
-
-                docker -v
-                docker compose version 
-                
-                """
-            }
+     stage("Stage One")
+    {
+        steps{
+            
+            sh """
+            echo "this is the first stage"  
+            echo "Other stages will start after this"  
+            """
         }
 
-        stage("Stage Two"){
-            // Stage or Production 
-            // input ( boolean, string, choices)
-            steps{
-                script{
-                    def deployOption=input(
-                        message: "Choose your environment" ,
-                        parameters: [
-                             choice(name: 'DEPLOY_ENV',
-                              choices: ['staging', 'production'], description: 'Select deployment environment')
-     
-                        ]
-                    )
-
-                    echo "Deploy option is : ${deployOption}"
-                    // if deployOption==....
+    }
+    stage("Stage Two"){
+        parallel{
+            stage("Push docker image to dockerhub"){
+                steps{
+                    sh "echo 'Pushing docker image to docker hub '" 
+                }
+            }
+            stage("push docker image to gitlab "){
+                steps {
+                    echo "push docker image to gitlabb registry"
+                }
+            }
+            stage("pushing docker  image ghcr"){
+                steps{
+                    echo "push docker image to ghcr registry"
                 }
             }
         }
     }
 
-    post{
-        success{
-            sh " echo ' this is the successful message ' "
-        }
-        always{
-            sh """
-            echo " this is will always get executed "
-            """
-        }
-        failure{
-            sh " echo' this is failed message '"
-        }
     }
 }
