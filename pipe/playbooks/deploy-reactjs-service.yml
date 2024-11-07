@@ -7,7 +7,7 @@
   tasks: 
     - name: Start Reactjs with docker compose
       docker_compose: 
-        project_name: reactjs-new-srv
+        project_name: reactjs-new1-srv
         definition:
           services:
             reactjs_srv:   
